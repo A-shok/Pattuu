@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Employee Login 💼❤️</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body class="bg">
+<div class="overlay"></div>
+
+<div class="card">
+  <h2>Employee Entry Register</h2>
+  <p class="sub">Receptionist is waiting for you 😊</p>
+
+  <input id="user" placeholder="Employee Name">
+  <input id="pass" type="password" placeholder="Access Code">
+
+  <button onclick="login()">Check-In ❤️</button>
+  <p id="msg"></p>
+</div>
+
+<script>
+function login(){
+  let u = user.value;
+  let p = pass.value;
+
+  // CHANGE THIS
+  if(u==="Ashok" && p==="love"){
+    msg.style.color="green";
+    msg.innerText="Welcome sir 💖";
+    setTimeout(()=>location.href="welcome.html",1000);
+  }else{
+    msg.style.color="red";
+    msg.innerText="Receptionist says: Wrong details 😌";
+  }
+}
+</script>
+</body>
+</html>
