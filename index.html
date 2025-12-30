@@ -2,39 +2,119 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Employee Login 💼❤️</title>
-<link rel="stylesheet" href="style.css">
+<title>Our Love Story 💖</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Segoe UI',sans-serif;
+}
+
+body{
+  height:100vh;
+  background:url("bg.png") center/cover no-repeat;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+}
+
+/* overlay */
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.45);
+  backdrop-filter:blur(4px);
+}
+
+/* common card */
+.card{
+  position:relative;
+  z-index:2;
+  background:white;
+  width:320px;
+  padding:30px;
+  border-radius:20px;
+  text-align:center;
+  animation:fade 1s ease;
+}
+
+@keyframes fade{
+  from{opacity:0;transform:scale(0.9)}
+  to{opacity:1;transform:scale(1)}
+}
+
+h2{margin-bottom:10px}
+p{font-size:15px;line-height:1.6;margin:15px 0}
+
+input{
+  width:100%;
+  padding:12px;
+  margin:10px 0;
+  border-radius:12px;
+  border:1px solid #ccc;
+}
+
+button{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:14px;
+  background:linear-gradient(135deg,#ff6a88,#ff99ac);
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+}
+
+/* hide sections */
+.hidden{display:none}
+
+/* slideshow */
+.slideshow{
+  position:fixed;
+  inset:0;
+  z-index:3;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+}
+
+.slideshow img{
+  width:80%;
+  max-width:350px;
+  border-radius:20px;
+  box-shadow:0 20px 50px rgba(0,0,0,0.5);
+  animation:slideFade 5s infinite;
+}
+
+@keyframes slideFade{
+  0%{opacity:0}
+  20%{opacity:1}
+  80%{opacity:1}
+  100%{opacity:0}
+}
+
+.love-text{
+  color:white;
+  font-size:20px;
+  margin-top:20px;
+  text-align:center;
+}
+</style>
 </head>
 
-<body class="bg">
+<body>
+
 <div class="overlay"></div>
 
-<div class="card">
-  <h2>Employee Entry Register</h2>
-  <p class="sub">Receptionist is waiting for you 😊</p>
+<!-- LOGIN PAGE -->
+<div class="card" id="loginBox">
+  <h2>Employee Login 💼</h2>
 
   <input id="user" placeholder="Employee Name">
   <input id="pass" type="password" placeholder="Access Code">
 
-  <button onclick="login()">Check-In ❤️</button>
-  <p id="msg"></p>
-</div>
-
-<script>
-function login(){
-  let u = user.value;
-  let p = pass.value;
-
-  // CHANGE THIS
-  if(u==="Ashok" && p==="love"){
-    msg.style.color="green";
-    msg.innerText="Welcome sir 💖";
-    setTimeout(()=>location.href="welcome.html",1000);
-  }else{
-    msg.style.color="red";
-    msg.innerText="Receptionist says: Wrong details 😌";
-  }
-}
-</script>
-</body>
-</html>
+  <button onclick="login()">Login</butto
