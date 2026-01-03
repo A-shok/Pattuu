@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Our Love Story 💖</title>
+<title>Our Love Journey 💖</title>
 
 <style>
 *{
@@ -26,34 +26,34 @@ body{
   position:fixed;
   inset:0;
   background:rgba(0,0,0,0.45);
-  backdrop-filter:blur(4px);
+  backdrop-filter:blur(5px);
 }
 
-/* common card */
+/* card */
 .card{
   position:relative;
   z-index:2;
   background:white;
-  width:320px;
+  width:340px;
   padding:30px;
-  border-radius:20px;
+  border-radius:22px;
   text-align:center;
-  animation:fade 1s ease;
+  animation:pop 1s ease;
 }
 
-@keyframes fade{
-  from{opacity:0;transform:scale(0.9)}
+@keyframes pop{
+  from{opacity:0;transform:scale(0.85)}
   to{opacity:1;transform:scale(1)}
 }
 
-h2{margin-bottom:10px}
-p{font-size:15px;line-height:1.6;margin:15px 0}
+h2{margin-bottom:12px}
+p{font-size:15px;line-height:1.6;margin:18px 0}
 
 input{
   width:100%;
   padding:12px;
   margin:10px 0;
-  border-radius:12px;
+  border-radius:14px;
   border:1px solid #ccc;
 }
 
@@ -61,14 +61,15 @@ button{
   width:100%;
   padding:12px;
   border:none;
-  border-radius:14px;
-  background:linear-gradient(135deg,#ff6a88,#ff99ac);
+  border-radius:16px;
+  background:linear-gradient(135deg,#ff5f8a,#ff8fb1);
   color:white;
   font-size:16px;
   cursor:pointer;
 }
 
-/* hide sections */
+button:hover{transform:scale(1.05)}
+
 .hidden{display:none}
 
 /* slideshow */
@@ -77,20 +78,20 @@ button{
   inset:0;
   z-index:3;
   display:flex;
+  flex-direction:column;
   justify-content:center;
   align-items:center;
-  flex-direction:column;
 }
 
 .slideshow img{
-  width:80%;
-  max-width:350px;
-  border-radius:20px;
-  box-shadow:0 20px 50px rgba(0,0,0,0.5);
-  animation:slideFade 5s infinite;
+  width:85%;
+  max-width:360px;
+  border-radius:22px;
+  box-shadow:0 20px 50px rgba(0,0,0,0.6);
+  animation:fadeSlide 6s infinite;
 }
 
-@keyframes slideFade{
+@keyframes fadeSlide{
   0%{opacity:0}
   20%{opacity:1}
   80%{opacity:1}
@@ -98,9 +99,9 @@ button{
 }
 
 .love-text{
+  margin-top:20px;
   color:white;
   font-size:20px;
-  margin-top:20px;
   text-align:center;
 }
 </style>
@@ -113,8 +114,68 @@ button{
 <!-- LOGIN PAGE -->
 <div class="card" id="loginBox">
   <h2>Employee Login 💼</h2>
-
   <input id="user" placeholder="Employee Name">
   <input id="pass" type="password" placeholder="Access Code">
+  <button onclick="login()">Login</button>
+  <p id="msg"></p>
+</div>
 
-  <button onclick="login()">Login</butto
+<!-- MESSAGE PAGE -->
+<div class="card hidden" id="messageBox">
+  <p>
+    I was waiting for you…<br>
+    not as a receptionist,<br>
+    but as someone waiting for true love 💖
+  </p>
+  <button onclick="startJourney()">Our Love Journey 💕</button>
+</div>
+
+<!-- SLIDESHOW PAGE -->
+<div class="slideshow hidden" id="slideshow">
+  <img id="slideImg">
+  <div class="love-text">
+    Every picture is a memory… every memory is us 💞
+  </div>
+</div>
+
+<audio id="music" src="music.mp3"></audio>
+
+<script>
+/* LOGIN DETAILS */
+const USERNAME = "Ashok";
+const PASSWORD = "Pattu";
+
+/* SLIDESHOW IMAGES (10) */
+const images = [
+  "img1.jpg","img2.jpg","img3.jpg","img4.jpg","img5.jpg",
+  "img6.jpg","img7.jpg","img8.jpg","img9.jpg","img10.jpg"
+];
+
+let index = 0;
+
+function login(){
+  if(user.value === USERNAME && pass.value === PASSWORD){
+    loginBox.classList.add("hidden");
+    messageBox.classList.remove("hidden");
+  }else{
+    msg.style.color = "red";
+    msg.innerText = "Access Denied ❌";
+  }
+}
+
+function startJourney(){
+  messageBox.classList.add("hidden");
+  slideshow.classList.remove("hidden");
+  music.play();
+  showImage();
+  setInterval(showImage,6000);
+}
+
+function showImage(){
+  slideImg.src = images[index];
+  index = (index + 1) % images.length;
+}
+</script>
+
+</body>
+</html>
