@@ -19,37 +19,34 @@ body{
   justify-content:center;
   align-items:center;
   overflow:hidden;
+  position:relative;
 }
 
-/* OVERLAY (FIXED – WILL NOT BLOCK INPUTS) */
-.overlay{
-  position:fixed;
+body::before{
+  content:"";
+  position:absolute;
   inset:0;
   background:rgba(0,0,0,0.45);
-  backdrop-filter:blur(5px);
-  pointer-events:none;
-  z-index:1;
+  backdrop-filter:blur(4px);
+  z-index:0;
 }
 
 /* CARD */
 .card{
   position:relative;
-  z-index:2;
+  z-index:1;
   background:white;
-  width:340px;
+  width:350px;
   padding:30px;
   border-radius:22px;
   text-align:center;
-  animation:pop 1s ease;
+  animation:pop .8s ease;
 }
 
 @keyframes pop{
-  from{opacity:0;transform:scale(0.85)}
+  from{opacity:0;transform:scale(.9)}
   to{opacity:1;transform:scale(1)}
 }
-
-h2{margin-bottom:12px}
-p{font-size:15px;line-height:1.6;margin:18px 0}
 
 input{
   width:100%;
@@ -62,6 +59,7 @@ input{
 button{
   width:100%;
   padding:12px;
+  margin-top:15px;
   border:none;
   border-radius:16px;
   background:linear-gradient(135deg,#ff5f8a,#ff8fb1);
@@ -70,17 +68,14 @@ button{
   cursor:pointer;
 }
 
-button:hover{transform:scale(1.05)}
-
 .hidden{display:none}
 
 /* SLIDESHOW */
 .slideshow{
-  position:fixed;
+  position:absolute;
   inset:0;
-  z-index:3;
+  z-index:2;
   display:flex;
-  flex-direction:column;
   justify-content:center;
   align-items:center;
 }
@@ -90,75 +85,101 @@ button:hover{transform:scale(1.05)}
   max-width:360px;
   border-radius:22px;
   box-shadow:0 20px 50px rgba(0,0,0,0.6);
-  animation:fadeSlide 6s infinite;
+  animation:fade 6s infinite;
 }
 
-@keyframes fadeSlide{
+@keyframes fade{
   0%{opacity:0}
   20%{opacity:1}
   80%{opacity:1}
   100%{opacity:0}
 }
 
-.love-text{
-  margin-top:20px;
-  color:white;
-  font-size:20px;
-  text-align:center;
+/* HEARTS */
+.heart{
+  position:absolute;
+  bottom:-20px;
+  font-size:22px;
+  animation:float 6s linear forwards;
+}
+
+@keyframes float{
+  to{transform:translateY(-110vh) scale(1.6);opacity:0}
+}
+
+/* TYPEWRITER */
+.typewriter{
+  font-size:15px;
+  line-height:1.7;
+  white-space:pre-line;
+  min-height:200px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="overlay"></div>
-
-<!-- LOGIN PAGE -->
+<!-- LOGIN -->
 <div class="card" id="loginBox">
   <h2>Employee Login 💼</h2>
-
   <input id="user" type="text" placeholder="Employee Name">
   <input id="pass" type="password" placeholder="Access Code">
-
   <button onclick="login()">Login</button>
   <p id="msg"></p>
 </div>
 
-<!-- MESSAGE PAGE -->
+<!-- INTRO MESSAGE -->
 <div class="card hidden" id="messageBox">
-  <p>
-    I was waiting for you…<br>
-    not as a receptionist,<br>
-    but as someone waiting for true love 💖
-  </p>
-
+  <div class="typewriter" id="introText"></div>
   <button onclick="startJourney()">Our Love Journey 💕</button>
 </div>
 
-<!-- SLIDESHOW PAGE -->
+<!-- SLIDESHOW -->
 <div class="slideshow hidden" id="slideshow">
   <img id="slideImg">
-  <div class="love-text">
-    Every picture is a memory… every memory is us 💞
-  </div>
 </div>
 
-<!-- AUDIO FILES -->
+<!-- LOVE LETTER PAGE -->
+<div class="card hidden" id="letterBox">
+  <div class="typewriter" id="letterText"></div>
+</div>
+
+<!-- AUDIO -->
 <audio id="audio1" src="music1.mp3"></audio>
 <audio id="audio2" src="music2.mp3"></audio>
 
 <script>
-/* LOGIN CREDENTIALS */
+/* LOGIN */
 const USERNAME = "Ashok";
 const PASSWORD = "Pattu";
 
-/* IMAGES (10) */
+/* TEXTS */
+const intro =
+`I was waiting for you…
+not as a receptionist,
+but as someone waiting for true love 💖`;
+
+const loveLetter =
+`My Love ❤️,
+
+I don’t know when it started,
+but somewhere between smiles and silence,
+you became my favorite part of every day.
+
+I don’t promise perfection,
+but I promise effort.
+I promise to choose you,
+even on the days that are hard.
+
+This is not just love,
+this is my heart choosing you —
+today, tomorrow, always 💕`;
+
 const images = [
   "img1.jpg","img2.jpg","img3.jpg","img4.jpg","img5.jpg",
   "img6.jpg","img7.jpg","img8.jpg","img9.jpg","img10.jpg"
 ];
 
-/* AUDIO LIST */
 const audios = [
   document.getElementById("audio1"),
   document.getElementById("audio2")
@@ -167,46 +188,69 @@ const audios = [
 let imgIndex = 0;
 let audioIndex = 0;
 
-/* LOGIN FUNCTION */
+/* LOGIN */
 function login(){
   if(user.value === USERNAME && pass.value === PASSWORD){
     loginBox.classList.add("hidden");
     messageBox.classList.remove("hidden");
+    typeText(intro, introText);
   }else{
-    msg.style.color = "red";
-    msg.innerText = "Access Denied ❌";
+    msg.style.color="red";
+    msg.innerText="Access Denied ❌";
   }
+}
+
+/* TYPEWRITER */
+function typeText(text, el){
+  el.innerHTML="";
+  let i=0;
+  const t=setInterval(()=>{
+    el.innerHTML+=text.charAt(i);
+    i++;
+    if(i>=text.length) clearInterval(t);
+  },45);
 }
 
 /* START JOURNEY */
 function startJourney(){
   messageBox.classList.add("hidden");
   slideshow.classList.remove("hidden");
-
   playAudio();
   showImage();
   setInterval(showImage,6000);
+  setInterval(createHeart,600);
+
+  setTimeout(()=>{
+    slideshow.classList.add("hidden");
+    letterBox.classList.remove("hidden");
+    typeText(loveLetter, letterText);
+  }, images.length * 6000);
 }
 
-/* IMAGE CHANGE */
+/* SLIDES */
 function showImage(){
   slideImg.src = images[imgIndex];
   imgIndex = (imgIndex + 1) % images.length;
 }
 
-/* AUDIO LOOP */
+/* AUDIO */
 function playAudio(){
-  audios.forEach(a => {
-    a.pause();
-    a.currentTime = 0;
-  });
-
+  audios.forEach(a=>{a.pause();a.currentTime=0});
   audios[audioIndex].play();
-
-  audios[audioIndex].onended = () => {
-    audioIndex = (audioIndex + 1) % audios.length;
+  audios[audioIndex].onended=()=>{
+    audioIndex=(audioIndex+1)%audios.length;
     playAudio();
   };
+}
+
+/* HEARTS */
+function createHeart(){
+  const h=document.createElement("div");
+  h.className="heart";
+  h.innerText="❤️";
+  h.style.left=Math.random()*100+"vw";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),6000);
 }
 </script>
 
