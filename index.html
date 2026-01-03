@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Happy Birthday My Love 🎂💖</title>
 
 <style>
@@ -13,18 +14,18 @@
 }
 
 body{
-  height:100vh;
+  min-height:100vh;
   background:url("bg.png") center/cover no-repeat;
   display:flex;
   justify-content:center;
   align-items:center;
 }
 
-/* dark background (SAFE) */
+/* dark background */
 .bg-dark{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.4);
+  background:rgba(0,0,0,0.45);
   z-index:0;
 }
 
@@ -33,24 +34,27 @@ body{
   position:relative;
   z-index:1;
   background:white;
-  width:340px;
-  padding:30px;
+  width:90%;
+  max-width:360px;
+  padding:25px;
   border-radius:22px;
   text-align:center;
 }
 
+/* inputs */
 input{
   width:100%;
   padding:12px;
   margin:10px 0;
   border-radius:14px;
   border:1px solid #ccc;
+  font-size:15px;
 }
 
 button{
   width:100%;
   padding:12px;
-  margin-top:10px;
+  margin-top:12px;
   border:none;
   border-radius:16px;
   background:linear-gradient(135deg,#ff5f8a,#ff8fb1);
@@ -61,7 +65,7 @@ button{
 
 .hidden{display:none}
 
-/* typewriter */
+/* typing */
 .typewriter{
   min-height:120px;
   line-height:1.6;
@@ -73,27 +77,20 @@ button{
   inset:0;
   z-index:2;
   display:flex;
-  flex-direction:column;
   justify-content:center;
   align-items:center;
 }
 
 .slideshow img{
-  width:80%;
-  max-width:360px;
-  border-radius:20px;
-  box-shadow:0 20px 50px rgba(0,0,0,0.5);
-  animation:fade 5s infinite;
+  width:90%;
+  max-width:380px;
+  height:auto;
+  border-radius:18px;
+  object-fit:contain;
+  box-shadow:0 20px 40px rgba(0,0,0,0.5);
 }
 
-@keyframes fade{
-  0%{opacity:0}
-  20%{opacity:1}
-  80%{opacity:1}
-  100%{opacity:0}
-}
-
-/* floating hearts */
+/* hearts */
 .heart{
   position:fixed;
   bottom:-20px;
@@ -120,7 +117,7 @@ button{
   <p id="msg"></p>
 </div>
 
-<!-- BIRTHDAY MESSAGE -->
+<!-- WISH -->
 <div class="card hidden" id="wishBox">
   <div class="typewriter" id="wishText"></div>
   <button onclick="startShow()">Start Surprise 🎁</button>
@@ -128,7 +125,7 @@ button{
 
 <!-- SLIDESHOW -->
 <div class="slideshow hidden" id="slideshow">
-  <img id="slideImg">
+  <img id="slideImg" src="">
 </div>
 
 <!-- MUSIC -->
@@ -139,18 +136,17 @@ button{
 const USERNAME = "Ashok";
 const PASSWORD = "Pattu";
 
-/* BIRTHDAY WISH */
-const birthdayWish =
+/* TEXT */
+const wish =
 `Happy Birthday My Love 🎂💖
 
 Every smile of yours
-is my favorite reason to be happy.
+is my favorite happiness.
 
-Today is special,
-because the most beautiful soul
-was born on this day 💕`;
+May this day bring
+endless joy and love 💕`;
 
-/* SLIDESHOW IMAGES */
+/* IMAGES */
 const images = [
   "img1.jpg",
   "img2.jpg",
@@ -162,8 +158,7 @@ const images = [
 /* SONGS */
 const songs = [
   "song1.mp3",
-  "song2.mp3",
-  "song3.mp3"
+  "song2.mp3"
 ];
 
 let imgIndex = 0;
@@ -174,7 +169,7 @@ function login(){
   if(user.value === USERNAME && pass.value === PASSWORD){
     loginBox.classList.add("hidden");
     wishBox.classList.remove("hidden");
-    typeWish();
+    typeText();
   }else{
     msg.style.color="red";
     msg.innerText="Wrong details 😌";
@@ -182,17 +177,17 @@ function login(){
 }
 
 /* TYPEWRITER */
-function typeWish(){
+function typeText(){
   let i=0;
   wishText.innerHTML="";
   const t=setInterval(()=>{
-    wishText.innerHTML += birthdayWish.charAt(i);
+    wishText.innerHTML += wish.charAt(i);
     i++;
-    if(i>=birthdayWish.length) clearInterval(t);
+    if(i>=wish.length) clearInterval(t);
   },40);
 }
 
-/* START SLIDESHOW + MUSIC */
+/* START SHOW */
 function startShow(){
   wishBox.classList.add("hidden");
   slideshow.classList.remove("hidden");
@@ -200,11 +195,11 @@ function startShow(){
   playSong();
   showImage();
 
-  setInterval(showImage,5000);
-  setInterval(createHeart,600);
+  setInterval(showImage,4000);
+  setInterval(createHeart,700);
 }
 
-/* IMAGE */
+/* SLIDES */
 function showImage(){
   slideImg.src = images[imgIndex];
   imgIndex = (imgIndex + 1) % images.length;
