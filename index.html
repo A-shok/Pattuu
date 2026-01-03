@@ -21,12 +21,13 @@ body{
   overflow:hidden;
 }
 
-/* overlay */
+/* overlay (FIXED) */
 .overlay{
-  pointer-events:none;
+  position:fixed;
   inset:0;
   background:rgba(0,0,0,0.45);
   backdrop-filter:blur(5px);
+  pointer-events:none;
 }
 
 /* card */
@@ -138,21 +139,31 @@ button:hover{transform:scale(1.05)}
   </div>
 </div>
 
-<audio id="music" src="music.mp3"></audio>
+<!-- AUDIO FILES -->
+<audio id="audio1" src="music1.mp3"></audio>
+<audio id="audio2" src="music2.mp3"></audio>
 
 <script>
 /* LOGIN DETAILS */
 const USERNAME = "Ashok";
 const PASSWORD = "Pattu";
 
-/* SLIDESHOW IMAGES (10) */
+/* SLIDESHOW IMAGES */
 const images = [
   "img1.jpg","img2.jpg","img3.jpg","img4.jpg","img5.jpg",
   "img6.jpg","img7.jpg","img8.jpg","img9.jpg","img10.jpg"
 ];
 
-let index = 0;
+/* AUDIO LIST */
+const audios = [
+  document.getElementById("audio1"),
+  document.getElementById("audio2")
+];
 
+let imgIndex = 0;
+let audioIndex = 0;
+
+/* LOGIN */
 function login(){
   if(user.value === USERNAME && pass.value === PASSWORD){
     loginBox.classList.add("hidden");
@@ -163,20 +174,34 @@ function login(){
   }
 }
 
+/* START SLIDESHOW */
 function startJourney(){
   messageBox.classList.add("hidden");
   slideshow.classList.remove("hidden");
-  music.play();
+
+  playAudio();
   showImage();
   setInterval(showImage,6000);
 }
 
+/* IMAGE CHANGE */
 function showImage(){
-  slideImg.src = images[index];
-  index = (index + 1) % images.length;
+  slideImg.src = images[imgIndex];
+  imgIndex = (imgIndex + 1) % images.length;
+}
+
+/* AUDIO CHANGE */
+function playAudio(){
+  audios.forEach(a => { a.pause(); a.currentTime = 0; });
+
+  audios[audioIndex].play();
+
+  audios[audioIndex].onended = () => {
+    audioIndex = (audioIndex + 1) % audios.length;
+    playAudio();
+  };
 }
 </script>
 
 </body>
 </html>
-
