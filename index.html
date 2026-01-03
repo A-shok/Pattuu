@@ -13,7 +13,7 @@
   font-family:Segoe UI, sans-serif;
 }
 
-/* -------- LOGIN PAGE -------- */
+/* ---------- LOGIN ---------- */
 body{
   min-height:100vh;
   background:url("bg.png") center/cover no-repeat;
@@ -53,7 +53,7 @@ body{
   cursor:pointer;
 }
 
-/* -------- SURPRISE PAGE -------- */
+/* ---------- SURPRISE ---------- */
 #surprise{
   position:fixed;
   inset:0;
@@ -68,8 +68,6 @@ body{
   width:90%;
   max-width:420px;
   height:60vh;
-  background:black;
-  border-radius:20px;
   display:flex;
   justify-content:center;
   align-items:center;
@@ -78,13 +76,13 @@ body{
 #photo-box img{
   width:100%;
   height:100%;
-  object-fit:contain; /* FULL PHOTO, NO CUT */
+  object-fit:contain;   /* FULL PHOTO – NO CROP */
   border-radius:20px;
 }
 
 #wish{
   color:white;
-  margin-top:18px;
+  margin-top:15px;
   font-size:18px;
   text-align:center;
 }
@@ -98,6 +96,42 @@ body{
   color:white;
   font-size:16px;
   cursor:pointer;
+}
+
+/* ---------- HEARTS ---------- */
+.heart{
+  position:fixed;
+  bottom:-20px;
+  font-size:22px;
+  animation:float 6s linear forwards;
+}
+
+@keyframes float{
+  to{
+    transform:translateY(-110vh);
+    opacity:0;
+  }
+}
+
+/* ---------- LOVE LETTER ---------- */
+#letter{
+  position:fixed;
+  inset:0;
+  background:black;
+  display:none;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+
+#letterBox{
+  background:white;
+  max-width:400px;
+  padding:25px;
+  border-radius:22px;
+  font-size:15px;
+  line-height:1.7;
+  white-space:pre-line;
 }
 </style>
 </head>
@@ -123,8 +157,13 @@ body{
   <audio id="player"></audio>
 </div>
 
+<!-- LOVE LETTER -->
+<div id="letter">
+  <div id="letterBox"></div>
+</div>
+
 <script>
-/* ---------- LOGIN DETAILS ---------- */
+/* ---------- LOGIN ---------- */
 const USERNAME = "Ashok";
 const PASSWORD = "Pattu";
 
@@ -137,51 +176,97 @@ const photos = [
   "img5.jpg"
 ];
 
-const songs = [
-  "song1.mp3",
-  "song2.mp3"
-];
+const songs = ["song1.mp3","song2.mp3"];
 
-let photoIndex = 0;
-let songIndex = 0;
-let slideTimer = null;
+const loveLetter =
+`My Love 💌,
+
+Every photo you just saw
+is a memory I hold close to my heart.
+
+You are my calm,
+my happiness,
+my forever person.
+
+On your birthday and every day,
+I choose you — again and again ❤️`;
+
+let p = 0;
+let s = 0;
+let slideInterval;
+
+/* ---------- PRELOAD IMAGES (FIX FOR MISSING PHOTOS) ---------- */
+photos.forEach(src=>{
+  const img = new Image();
+  img.src = src;
+});
 
 /* ---------- LOGIN ---------- */
 function login(){
   if(user.value === USERNAME && pass.value === PASSWORD){
-    loginBox.style.display = "none";
-    surprise.style.display = "flex";
+    loginBox.style.display="none";
+    surprise.style.display="flex";
   }else{
-    msg.style.color = "red";
-    msg.innerText = "Wrong details 😌";
+    msg.style.color="red";
+    msg.innerText="Wrong details 😌";
   }
 }
 
-/* ---------- START SURPRISE (USER CLICK REQUIRED) ---------- */
+/* ---------- START SURPRISE ---------- */
 function startSurprise(){
-  showPhoto();     // show first photo immediately
-  playSong();      // audio allowed only after click
+  startBtn.style.display="none";
+  showPhoto();
+  playSong();
 
-  if(!slideTimer){
-    slideTimer = setInterval(showPhoto, 4000);
-  }
+  slideInterval = setInterval(showPhoto, 3000); // 3 seconds
+  setInterval(createHeart, 600);
+
+  // After slideshow → love letter
+  setTimeout(showLetter, photos.length * 3000);
 }
 
-/* ---------- PHOTO SLIDES ---------- */
+/* ---------- PHOTO ---------- */
 function showPhoto(){
-  photo.src = photos[photoIndex];
-  photoIndex = (photoIndex + 1) % photos.length;
+  photo.src = photos[p];
+  p = (p + 1) % photos.length;
 }
 
 /* ---------- MUSIC ---------- */
 function playSong(){
-  player.src = songs[songIndex];
+  player.src = songs[s];
   player.play().catch(()=>{});
-
   player.onended = ()=>{
-    songIndex = (songIndex + 1) % songs.length;
+    s = (s + 1) % songs.length;
     playSong();
   };
+}
+
+/* ---------- HEARTS ---------- */
+function createHeart(){
+  const h=document.createElement("div");
+  h.className="heart";
+  h.innerText="❤️";
+  h.style.left=Math.random()*100+"vw";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),6000);
+}
+
+/* ---------- LOVE LETTER ---------- */
+function showLetter(){
+  clearInterval(slideInterval);
+  surprise.style.display="none";
+  letter.style.display="flex";
+  typeLetter();
+}
+
+function typeLetter(){
+  let i=0;
+  letterBox.innerHTML="";
+  const t=setInterval(()=>{
+    letterBox.innerHTML += loveLetter.charAt(i);
+    i++;
+    if(i>=loveLetter.length) clearInterval(t);
+  },40);
 }
 </script>
 
