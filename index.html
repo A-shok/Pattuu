@@ -21,16 +21,17 @@ body{
   overflow:hidden;
 }
 
-/* overlay (FIXED) */
+/* OVERLAY (FIXED – WILL NOT BLOCK INPUTS) */
 .overlay{
   position:fixed;
   inset:0;
   background:rgba(0,0,0,0.45);
   backdrop-filter:blur(5px);
   pointer-events:none;
+  z-index:1;
 }
 
-/* card */
+/* CARD */
 .card{
   position:relative;
   z-index:2;
@@ -73,7 +74,7 @@ button:hover{transform:scale(1.05)}
 
 .hidden{display:none}
 
-/* slideshow */
+/* SLIDESHOW */
 .slideshow{
   position:fixed;
   inset:0;
@@ -115,8 +116,10 @@ button:hover{transform:scale(1.05)}
 <!-- LOGIN PAGE -->
 <div class="card" id="loginBox">
   <h2>Employee Login 💼</h2>
-  <input id="user" placeholder="Employee Name">
+
+  <input id="user" type="text" placeholder="Employee Name">
   <input id="pass" type="password" placeholder="Access Code">
+
   <button onclick="login()">Login</button>
   <p id="msg"></p>
 </div>
@@ -128,6 +131,7 @@ button:hover{transform:scale(1.05)}
     not as a receptionist,<br>
     but as someone waiting for true love 💖
   </p>
+
   <button onclick="startJourney()">Our Love Journey 💕</button>
 </div>
 
@@ -144,11 +148,11 @@ button:hover{transform:scale(1.05)}
 <audio id="audio2" src="music2.mp3"></audio>
 
 <script>
-/* LOGIN DETAILS */
+/* LOGIN CREDENTIALS */
 const USERNAME = "Ashok";
 const PASSWORD = "Pattu";
 
-/* SLIDESHOW IMAGES */
+/* IMAGES (10) */
 const images = [
   "img1.jpg","img2.jpg","img3.jpg","img4.jpg","img5.jpg",
   "img6.jpg","img7.jpg","img8.jpg","img9.jpg","img10.jpg"
@@ -163,7 +167,7 @@ const audios = [
 let imgIndex = 0;
 let audioIndex = 0;
 
-/* LOGIN */
+/* LOGIN FUNCTION */
 function login(){
   if(user.value === USERNAME && pass.value === PASSWORD){
     loginBox.classList.add("hidden");
@@ -174,7 +178,7 @@ function login(){
   }
 }
 
-/* START SLIDESHOW */
+/* START JOURNEY */
 function startJourney(){
   messageBox.classList.add("hidden");
   slideshow.classList.remove("hidden");
@@ -190,9 +194,12 @@ function showImage(){
   imgIndex = (imgIndex + 1) % images.length;
 }
 
-/* AUDIO CHANGE */
+/* AUDIO LOOP */
 function playAudio(){
-  audios.forEach(a => { a.pause(); a.currentTime = 0; });
+  audios.forEach(a => {
+    a.pause();
+    a.currentTime = 0;
+  });
 
   audios[audioIndex].play();
 
