@@ -13,7 +13,7 @@
   font-family:Segoe UI, sans-serif;
 }
 
-/* ---------- LOGIN PAGE ---------- */
+/* -------- LOGIN PAGE -------- */
 body{
   min-height:100vh;
   background:url("bg.png") center/cover no-repeat;
@@ -53,7 +53,7 @@ body{
   cursor:pointer;
 }
 
-/* ---------- SURPRISE PAGE ---------- */
+/* -------- SURPRISE PAGE -------- */
 #surprise{
   position:fixed;
   inset:0;
@@ -64,7 +64,7 @@ body{
   align-items:center;
 }
 
-#slide{
+#photo-box{
   width:90%;
   max-width:420px;
   height:60vh;
@@ -75,26 +75,37 @@ body{
   align-items:center;
 }
 
-#slide img{
+#photo-box img{
   width:100%;
   height:100%;
-  object-fit:contain;   /* ✅ FULL PHOTO, NO CUT */
+  object-fit:contain; /* FULL PHOTO, NO CUT */
   border-radius:20px;
 }
 
 #wish{
   color:white;
-  margin-top:20px;
+  margin-top:18px;
   font-size:18px;
   text-align:center;
+}
+
+#startBtn{
+  margin-top:15px;
+  padding:10px 22px;
+  border:none;
+  border-radius:14px;
+  background:#ff6a88;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
 }
 </style>
 </head>
 
 <body>
 
-<!-- LOGIN ONLY -->
-<div class="login-card" id="login">
+<!-- LOGIN -->
+<div class="login-card" id="loginBox">
   <h2>Employee Login 💼</h2>
   <input id="user" placeholder="Employee Name">
   <input id="pass" type="password" placeholder="Access Code">
@@ -102,63 +113,73 @@ body{
   <p id="msg"></p>
 </div>
 
-<!-- SURPRISE (CREATED AFTER LOGIN) -->
+<!-- SURPRISE -->
 <div id="surprise">
-  <div id="slide">
+  <div id="photo-box">
     <img id="photo">
   </div>
   <div id="wish">Happy Birthday My Love 🎂💖</div>
+  <button id="startBtn" onclick="startSurprise()">Start Surprise 🎁</button>
   <audio id="player"></audio>
 </div>
 
 <script>
-/* LOGIN DETAILS */
+/* ---------- LOGIN DETAILS ---------- */
 const USERNAME = "Ashok";
 const PASSWORD = "Pattu";
 
-/* SLIDES + SONGS */
+/* ---------- DATA ---------- */
 const photos = [
-  "img1.jpg","img2.jpg","img3.jpg","img4.jpg","img5.jpg"
+  "img1.jpg",
+  "img2.jpg",
+  "img3.jpg",
+  "img4.jpg",
+  "img5.jpg"
 ];
+
 const songs = [
-  "song1.mp3","song2.mp3"
+  "song1.mp3",
+  "song2.mp3"
 ];
 
-let p = 0;
-let s = 0;
+let photoIndex = 0;
+let songIndex = 0;
+let slideTimer = null;
 
-/* LOGIN */
+/* ---------- LOGIN ---------- */
 function login(){
   if(user.value === USERNAME && pass.value === PASSWORD){
-    document.body.style.background = "#000";
-    login.style.display = "none";
+    loginBox.style.display = "none";
     surprise.style.display = "flex";
-    startShow();
   }else{
     msg.style.color = "red";
     msg.innerText = "Wrong details 😌";
   }
 }
 
-/* START SHOW */
-function startShow(){
-  showPhoto();
-  playSong();
-  setInterval(showPhoto, 4000);
+/* ---------- START SURPRISE (USER CLICK REQUIRED) ---------- */
+function startSurprise(){
+  showPhoto();     // show first photo immediately
+  playSong();      // audio allowed only after click
+
+  if(!slideTimer){
+    slideTimer = setInterval(showPhoto, 4000);
+  }
 }
 
-/* PHOTO */
+/* ---------- PHOTO SLIDES ---------- */
 function showPhoto(){
-  photo.src = photos[p];
-  p = (p + 1) % photos.length;
+  photo.src = photos[photoIndex];
+  photoIndex = (photoIndex + 1) % photos.length;
 }
 
-/* MUSIC */
+/* ---------- MUSIC ---------- */
 function playSong(){
-  player.src = songs[s];
-  player.play();
+  player.src = songs[songIndex];
+  player.play().catch(()=>{});
+
   player.onended = ()=>{
-    s = (s + 1) % songs.length;
+    songIndex = (songIndex + 1) % songs.length;
     playSong();
   };
 }
