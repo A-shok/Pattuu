@@ -21,27 +21,17 @@ body{
   align-items:center;
 }
 
-/* dark background */
-.bg-dark{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.45);
-  z-index:0;
-}
-
 /* card */
 .card{
-  position:relative;
-  z-index:1;
   background:white;
   width:90%;
   max-width:360px;
   padding:25px;
   border-radius:22px;
   text-align:center;
+  box-shadow:0 15px 40px rgba(0,0,0,0.3);
 }
 
-/* inputs */
 input{
   width:100%;
   padding:12px;
@@ -73,9 +63,8 @@ button{
 
 /* slideshow */
 .slideshow{
-  position:fixed;
+  position:absolute;
   inset:0;
-  z-index:2;
   display:flex;
   justify-content:center;
   align-items:center;
@@ -84,7 +73,6 @@ button{
 .slideshow img{
   width:90%;
   max-width:380px;
-  height:auto;
   border-radius:18px;
   object-fit:contain;
   box-shadow:0 20px 40px rgba(0,0,0,0.5);
@@ -106,8 +94,6 @@ button{
 
 <body>
 
-<div class="bg-dark"></div>
-
 <!-- LOGIN -->
 <div class="card" id="loginBox">
   <h2>Employee Login 💼</h2>
@@ -125,18 +111,16 @@ button{
 
 <!-- SLIDESHOW -->
 <div class="slideshow hidden" id="slideshow">
-  <img id="slideImg" src="">
+  <img id="slideImg">
 </div>
 
 <!-- MUSIC -->
 <audio id="player"></audio>
 
 <script>
-/* LOGIN */
 const USERNAME = "Ashok";
 const PASSWORD = "Pattu";
 
-/* TEXT */
 const wish =
 `Happy Birthday My Love 🎂💖
 
@@ -146,7 +130,6 @@ is my favorite happiness.
 May this day bring
 endless joy and love 💕`;
 
-/* IMAGES */
 const images = [
   "img1.jpg",
   "img2.jpg",
@@ -155,7 +138,6 @@ const images = [
   "img5.jpg"
 ];
 
-/* SONGS */
 const songs = [
   "song1.mp3",
   "song2.mp3"
@@ -164,7 +146,6 @@ const songs = [
 let imgIndex = 0;
 let songIndex = 0;
 
-/* LOGIN */
 function login(){
   if(user.value === USERNAME && pass.value === PASSWORD){
     loginBox.classList.add("hidden");
@@ -176,7 +157,6 @@ function login(){
   }
 }
 
-/* TYPEWRITER */
 function typeText(){
   let i=0;
   wishText.innerHTML="";
@@ -187,7 +167,6 @@ function typeText(){
   },40);
 }
 
-/* START SHOW */
 function startShow(){
   wishBox.classList.add("hidden");
   slideshow.classList.remove("hidden");
@@ -199,24 +178,20 @@ function startShow(){
   setInterval(createHeart,700);
 }
 
-/* SLIDES */
 function showImage(){
   slideImg.src = images[imgIndex];
   imgIndex = (imgIndex + 1) % images.length;
 }
 
-/* MUSIC */
 function playSong(){
   player.src = songs[songIndex];
   player.play();
-
   player.onended = ()=>{
     songIndex = (songIndex + 1) % songs.length;
     playSong();
   };
 }
 
-/* HEARTS */
 function createHeart(){
   const h=document.createElement("div");
   h.className="heart";
