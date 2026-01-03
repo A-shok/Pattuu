@@ -3,16 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Happy Birthday My Love 🎂💖</title>
+<title>Birthday Surprise 💖</title>
 
 <style>
 *{
   margin:0;
   padding:0;
   box-sizing:border-box;
-  font-family:'Segoe UI',sans-serif;
+  font-family:Segoe UI, sans-serif;
 }
 
+/* ---------- LOGIN PAGE ---------- */
 body{
   min-height:100vh;
   background:url("bg.png") center/cover no-repeat;
@@ -21,30 +22,29 @@ body{
   align-items:center;
 }
 
-/* card */
-.card{
+.login-card{
   background:white;
   width:90%;
   max-width:360px;
   padding:25px;
   border-radius:22px;
   text-align:center;
-  box-shadow:0 15px 40px rgba(0,0,0,0.3);
+  box-shadow:0 15px 40px rgba(0,0,0,.3);
 }
 
-input{
+.login-card input{
   width:100%;
   padding:12px;
   margin:10px 0;
   border-radius:14px;
   border:1px solid #ccc;
-  font-size:15px;
+  font-size:16px;
 }
 
-button{
+.login-card button{
   width:100%;
   padding:12px;
-  margin-top:12px;
+  margin-top:10px;
   border:none;
   border-radius:16px;
   background:linear-gradient(135deg,#ff5f8a,#ff8fb1);
@@ -53,152 +53,114 @@ button{
   cursor:pointer;
 }
 
-.hidden{display:none}
-
-/* typing */
-.typewriter{
-  min-height:120px;
-  line-height:1.6;
+/* ---------- SURPRISE PAGE ---------- */
+#surprise{
+  position:fixed;
+  inset:0;
+  background:black;
+  display:none;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
 }
 
-/* slideshow */
-.slideshow{
-  position:absolute;
-  inset:0;
+#slide{
+  width:90%;
+  max-width:420px;
+  height:60vh;
+  background:black;
+  border-radius:20px;
   display:flex;
   justify-content:center;
   align-items:center;
 }
 
-.slideshow img{
-  width:90%;
-  max-width:380px;
-  border-radius:18px;
-  object-fit:contain;
-  box-shadow:0 20px 40px rgba(0,0,0,0.5);
+#slide img{
+  width:100%;
+  height:100%;
+  object-fit:contain;   /* ✅ FULL PHOTO, NO CUT */
+  border-radius:20px;
 }
 
-/* hearts */
-.heart{
-  position:fixed;
-  bottom:-20px;
-  font-size:22px;
-  animation:float 6s linear forwards;
-}
-
-@keyframes float{
-  to{transform:translateY(-110vh);opacity:0}
+#wish{
+  color:white;
+  margin-top:20px;
+  font-size:18px;
+  text-align:center;
 }
 </style>
 </head>
 
 <body>
 
-<!-- LOGIN -->
-<div class="card" id="loginBox">
+<!-- LOGIN ONLY -->
+<div class="login-card" id="login">
   <h2>Employee Login 💼</h2>
-  <input id="user" type="text" placeholder="Employee Name">
+  <input id="user" placeholder="Employee Name">
   <input id="pass" type="password" placeholder="Access Code">
   <button onclick="login()">Login</button>
   <p id="msg"></p>
 </div>
 
-<!-- WISH -->
-<div class="card hidden" id="wishBox">
-  <div class="typewriter" id="wishText"></div>
-  <button onclick="startShow()">Start Surprise 🎁</button>
+<!-- SURPRISE (CREATED AFTER LOGIN) -->
+<div id="surprise">
+  <div id="slide">
+    <img id="photo">
+  </div>
+  <div id="wish">Happy Birthday My Love 🎂💖</div>
+  <audio id="player"></audio>
 </div>
-
-<!-- SLIDESHOW -->
-<div class="slideshow hidden" id="slideshow">
-  <img id="slideImg">
-</div>
-
-<!-- MUSIC -->
-<audio id="player"></audio>
 
 <script>
+/* LOGIN DETAILS */
 const USERNAME = "Ashok";
 const PASSWORD = "Pattu";
 
-const wish =
-`Happy Birthday My Love 🎂💖
-
-Every smile of yours
-is my favorite happiness.
-
-May this day bring
-endless joy and love 💕`;
-
-const images = [
-  "img1.jpg",
-  "img2.jpg",
-  "img3.jpg",
-  "img4.jpg",
-  "img5.jpg"
+/* SLIDES + SONGS */
+const photos = [
+  "img1.jpg","img2.jpg","img3.jpg","img4.jpg","img5.jpg"
 ];
-
 const songs = [
-  "song1.mp3",
-  "song2.mp3"
+  "song1.mp3","song2.mp3"
 ];
 
-let imgIndex = 0;
-let songIndex = 0;
+let p = 0;
+let s = 0;
 
+/* LOGIN */
 function login(){
   if(user.value === USERNAME && pass.value === PASSWORD){
-    loginBox.classList.add("hidden");
-    wishBox.classList.remove("hidden");
-    typeText();
+    document.body.style.background = "#000";
+    login.style.display = "none";
+    surprise.style.display = "flex";
+    startShow();
   }else{
-    msg.style.color="red";
-    msg.innerText="Wrong details 😌";
+    msg.style.color = "red";
+    msg.innerText = "Wrong details 😌";
   }
 }
 
-function typeText(){
-  let i=0;
-  wishText.innerHTML="";
-  const t=setInterval(()=>{
-    wishText.innerHTML += wish.charAt(i);
-    i++;
-    if(i>=wish.length) clearInterval(t);
-  },40);
-}
-
+/* START SHOW */
 function startShow(){
-  wishBox.classList.add("hidden");
-  slideshow.classList.remove("hidden");
-
+  showPhoto();
   playSong();
-  showImage();
-
-  setInterval(showImage,4000);
-  setInterval(createHeart,700);
+  setInterval(showPhoto, 4000);
 }
 
-function showImage(){
-  slideImg.src = images[imgIndex];
-  imgIndex = (imgIndex + 1) % images.length;
+/* PHOTO */
+function showPhoto(){
+  photo.src = photos[p];
+  p = (p + 1) % photos.length;
 }
 
+/* MUSIC */
 function playSong(){
-  player.src = songs[songIndex];
+  player.src = songs[s];
   player.play();
   player.onended = ()=>{
-    songIndex = (songIndex + 1) % songs.length;
+    s = (s + 1) % songs.length;
     playSong();
   };
-}
-
-function createHeart(){
-  const h=document.createElement("div");
-  h.className="heart";
-  h.innerText="❤️";
-  h.style.left=Math.random()*100+"vw";
-  document.body.appendChild(h);
-  setTimeout(()=>h.remove(),6000);
 }
 </script>
 
