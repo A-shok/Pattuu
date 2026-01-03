@@ -18,34 +18,25 @@ body{
   display:flex;
   justify-content:center;
   align-items:center;
-  overflow:hidden;
-  position:relative;
 }
 
-body::before{
-  content:"";
-  position:absolute;
+/* simple dark layer (NO blur, NO overlay bug) */
+.background-dark{
+  position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.45);
-  backdrop-filter:blur(4px);
+  background:rgba(0,0,0,0.4);
   z-index:0;
 }
 
-/* CARD */
+/* card */
 .card{
   position:relative;
   z-index:1;
   background:white;
-  width:350px;
+  width:340px;
   padding:30px;
   border-radius:22px;
   text-align:center;
-  animation:pop .8s ease;
-}
-
-@keyframes pop{
-  from{opacity:0;transform:scale(.9)}
-  to{opacity:1;transform:scale(1)}
 }
 
 input{
@@ -54,12 +45,13 @@ input{
   margin:10px 0;
   border-radius:14px;
   border:1px solid #ccc;
+  font-size:14px;
 }
 
 button{
   width:100%;
   padding:12px;
-  margin-top:15px;
+  margin-top:10px;
   border:none;
   border-radius:16px;
   background:linear-gradient(135deg,#ff5f8a,#ff8fb1);
@@ -70,54 +62,29 @@ button{
 
 .hidden{display:none}
 
-/* SLIDESHOW */
-.slideshow{
-  position:absolute;
-  inset:0;
-  z-index:2;
-  display:flex;
-  justify-content:center;
-  align-items:center;
+/* typewriter */
+.typewriter{
+  min-height:100px;
+  line-height:1.6;
 }
 
-.slideshow img{
-  width:85%;
-  max-width:360px;
-  border-radius:22px;
-  box-shadow:0 20px 50px rgba(0,0,0,0.6);
-  animation:fade 6s infinite;
-}
-
-@keyframes fade{
-  0%{opacity:0}
-  20%{opacity:1}
-  80%{opacity:1}
-  100%{opacity:0}
-}
-
-/* HEARTS */
+/* hearts */
 .heart{
-  position:absolute;
+  position:fixed;
   bottom:-20px;
   font-size:22px;
   animation:float 6s linear forwards;
 }
 
 @keyframes float{
-  to{transform:translateY(-110vh) scale(1.6);opacity:0}
-}
-
-/* TYPEWRITER */
-.typewriter{
-  font-size:15px;
-  line-height:1.7;
-  white-space:pre-line;
-  min-height:200px;
+  to{transform:translateY(-110vh);opacity:0}
 }
 </style>
 </head>
 
 <body>
+
+<div class="background-dark"></div>
 
 <!-- LOGIN -->
 <div class="card" id="loginBox">
@@ -128,122 +95,46 @@ button{
   <p id="msg"></p>
 </div>
 
-<!-- INTRO MESSAGE -->
+<!-- MESSAGE -->
 <div class="card hidden" id="messageBox">
-  <div class="typewriter" id="introText"></div>
-  <button onclick="startJourney()">Our Love Journey 💕</button>
+  <div class="typewriter" id="typing"></div>
+  <button onclick="startHearts()">Continue ❤️</button>
 </div>
-
-<!-- SLIDESHOW -->
-<div class="slideshow hidden" id="slideshow">
-  <img id="slideImg">
-</div>
-
-<!-- LOVE LETTER PAGE -->
-<div class="card hidden" id="letterBox">
-  <div class="typewriter" id="letterText"></div>
-</div>
-
-<!-- AUDIO -->
-<audio id="audio1" src="music1.mp3"></audio>
-<audio id="audio2" src="music2.mp3"></audio>
 
 <script>
-/* LOGIN */
 const USERNAME = "Ashok";
 const PASSWORD = "Pattu";
 
-/* TEXTS */
-const intro =
+const message =
 `I was waiting for you…
 not as a receptionist,
 but as someone waiting for true love 💖`;
 
-const loveLetter =
-`My Love ❤️,
-
-I don’t know when it started,
-but somewhere between smiles and silence,
-you became my favorite part of every day.
-
-I don’t promise perfection,
-but I promise effort.
-I promise to choose you,
-even on the days that are hard.
-
-This is not just love,
-this is my heart choosing you —
-today, tomorrow, always 💕`;
-
-const images = [
-  "img1.jpg","img2.jpg","img3.jpg","img4.jpg","img5.jpg",
-  "img6.jpg","img7.jpg","img8.jpg","img9.jpg","img10.jpg"
-];
-
-const audios = [
-  document.getElementById("audio1"),
-  document.getElementById("audio2")
-];
-
-let imgIndex = 0;
-let audioIndex = 0;
-
-/* LOGIN */
 function login(){
   if(user.value === USERNAME && pass.value === PASSWORD){
     loginBox.classList.add("hidden");
     messageBox.classList.remove("hidden");
-    typeText(intro, introText);
+    typeText();
   }else{
     msg.style.color="red";
     msg.innerText="Access Denied ❌";
   }
 }
 
-/* TYPEWRITER */
-function typeText(text, el){
-  el.innerHTML="";
+function typeText(){
   let i=0;
+  typing.innerHTML="";
   const t=setInterval(()=>{
-    el.innerHTML+=text.charAt(i);
+    typing.innerHTML += message.charAt(i);
     i++;
-    if(i>=text.length) clearInterval(t);
+    if(i>=message.length) clearInterval(t);
   },45);
 }
 
-/* START JOURNEY */
-function startJourney(){
-  messageBox.classList.add("hidden");
-  slideshow.classList.remove("hidden");
-  playAudio();
-  showImage();
-  setInterval(showImage,6000);
+function startHearts(){
   setInterval(createHeart,600);
-
-  setTimeout(()=>{
-    slideshow.classList.add("hidden");
-    letterBox.classList.remove("hidden");
-    typeText(loveLetter, letterText);
-  }, images.length * 6000);
 }
 
-/* SLIDES */
-function showImage(){
-  slideImg.src = images[imgIndex];
-  imgIndex = (imgIndex + 1) % images.length;
-}
-
-/* AUDIO */
-function playAudio(){
-  audios.forEach(a=>{a.pause();a.currentTime=0});
-  audios[audioIndex].play();
-  audios[audioIndex].onended=()=>{
-    audioIndex=(audioIndex+1)%audios.length;
-    playAudio();
-  };
-}
-
-/* HEARTS */
 function createHeart(){
   const h=document.createElement("div");
   h.className="heart";
