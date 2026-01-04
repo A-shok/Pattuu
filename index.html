@@ -76,7 +76,7 @@ body{
 #photo{
   width:100%;
   height:100%;
-  object-fit:contain;   /* FULL PHOTO, NO CUT */
+  object-fit:contain;   /* FULL PHOTO – NO CUT */
   border-radius:20px;
 }
 
@@ -150,7 +150,7 @@ body{
 <!-- SURPRISE -->
 <div id="surprise">
   <div id="photo-box">
-    <img id="photo">
+    <img id="photo" alt="Memory">
   </div>
   <div id="wish">Happy Birthday My Love 🎂💖</div>
   <button id="startBtn" onclick="startSurprise()">Start Surprise 🎁</button>
@@ -169,28 +169,28 @@ const PASSWORD = "Pattu";
 
 /* ---------- DATA ---------- */
 const photos = [
-  "./img1.jpg","./img2.jpg","./img3.jpg","./img4.jpg","./img5.jpg",
-  "./img6.jpg","./img7.jpg","./img8.jpg","./img9.jpg","./img10.jpg"
+  "img1.jpg","img2.jpg","img3.jpg","img4.jpg","img5.jpg",
+  "img6.jpg","img7.jpg","img8.jpg","img9.jpg","img10.jpg"
 ];
 
-const songs = ["./song1.mp3","./song2.mp3"];
+const songs = ["song1.mp3","song2.mp3"];
 
 const loveLetter =
 `My Love 💌,
 
-Every photo you just saw
-is a memory I treasure deeply.
+Every photo you saw
+is a memory I keep close to my heart.
 
-You are my peace,
-my happiness,
+You are my happiness,
+my calm,
 my forever.
 
 On your birthday and every day,
 I choose you — always ❤️`;
 
-let p = 0;
-let s = 0;
-let slideInterval;
+let photoIndex = 0;
+let songIndex = 0;
+let slideTimer;
 
 /* ---------- PRELOAD IMAGES ---------- */
 photos.forEach(src => {
@@ -201,24 +201,23 @@ photos.forEach(src => {
 /* ---------- LOGIN ---------- */
 function login(){
   if(user.value === USERNAME && pass.value === PASSWORD){
-    loginBox.style.display="none";
-    surprise.style.display="flex";
+    loginBox.style.display = "none";
+    surprise.style.display = "flex";
   }else{
-    msg.style.color="red";
-    msg.innerText="Wrong details 😌";
+    msg.style.color = "red";
+    msg.innerText = "Wrong details 😌";
   }
 }
 
 /* ---------- START SURPRISE ---------- */
 function startSurprise(){
-  startBtn.style.display="none";
+  startBtn.style.display = "none";
 
-  photo.style.display="block";
   photo.src = photos[0];
-  p = 1;
+  photoIndex = 1;
 
   playSong();
-  slideInterval = setInterval(showPhoto, 3000); // 3 sec
+  slideTimer = setInterval(showPhoto, 3000); // 3 seconds
   setInterval(createHeart, 600);
 
   setTimeout(showLetter, photos.length * 3000);
@@ -226,46 +225,47 @@ function startSurprise(){
 
 /* ---------- SLIDES ---------- */
 function showPhoto(){
-  photo.src = photos[p];
-  p = (p + 1) % photos.length;
+  photo.src = photos[photoIndex];
+  photoIndex = (photoIndex + 1) % photos.length;
 }
 
 /* ---------- MUSIC ---------- */
 function playSong(){
-  player.src = songs[s];
+  player.src = songs[songIndex];
   player.play().catch(()=>{});
-  player.onended = ()=>{
-    s = (s + 1) % songs.length;
+
+  player.onended = () => {
+    songIndex = (songIndex + 1) % songs.length;
     playSong();
   };
 }
 
 /* ---------- HEARTS ---------- */
 function createHeart(){
-  const h=document.createElement("div");
-  h.className="heart";
-  h.innerText="❤️";
-  h.style.left=Math.random()*100+"vw";
+  const h = document.createElement("div");
+  h.className = "heart";
+  h.innerText = "❤️";
+  h.style.left = Math.random() * 100 + "vw";
   document.body.appendChild(h);
-  setTimeout(()=>h.remove(),6000);
+  setTimeout(()=>h.remove(), 6000);
 }
 
 /* ---------- LOVE LETTER ---------- */
 function showLetter(){
-  clearInterval(slideInterval);
-  surprise.style.display="none";
-  letter.style.display="flex";
+  clearInterval(slideTimer);
+  surprise.style.display = "none";
+  letter.style.display = "flex";
   typeLetter();
 }
 
 function typeLetter(){
-  let i=0;
-  letterBox.innerHTML="";
-  const t=setInterval(()=>{
+  let i = 0;
+  letterBox.innerHTML = "";
+  const t = setInterval(()=>{
     letterBox.innerHTML += loveLetter.charAt(i);
     i++;
-    if(i>=loveLetter.length) clearInterval(t);
-  },40);
+    if(i >= loveLetter.length) clearInterval(t);
+  }, 40);
 }
 </script>
 
